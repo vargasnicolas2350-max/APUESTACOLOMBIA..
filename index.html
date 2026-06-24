@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>⚽ Pronósticos Colombia vs Portugal</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: 'Segoe UI', sans-serif;
+    min-height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
+    url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1600&q=80');
+
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:30px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    font-size:3rem;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#dcdcdc;
+}
+
+.card{
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+.match{
+    text-align:center;
+    font-size:2rem;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.flags{
+    font-size:3rem;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    margin-top:10px;
+    font-size:16px;
+}
+
+.score-container{
+    display:flex;
+    gap:15px;
+    margin-top:15px;
+}
+
+button{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:15px;
+    margin-top:20px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+}
+
+.save-btn{
+    background:#00b050;
+    color:white;
+}
+
+.save-btn:hover{
+    background:#009245;
+}
+
+.delete-btn{
+    background:#e53935;
+    color:white;
+    width:auto;
+    padding:10px 15px;
+}
+
+.pronostico{
+    background:white;
+    color:black;
+    border-radius:12px;
+    padding:15px;
+    margin-top:10px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.pronostico strong{
+    font-size:18px;
+}
+
+.total{
+    margin-top:10px;
+    color:#ffd700;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    color:#ddd;
+}
+
+@media(max-width:700px){
+
+    .score-container{
+        flex-direction:column;
+    }
+
+    .pronostico{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+
+    .header h1{
+        font-size:2rem;
+    }
+
+    .match{
+        font-size:1.4rem;
+    }
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>⚽ PRONÓSTICOS DEL PARTIDO ⚽</h1>
+<p>Comparte tu predicción para Colombia vs Portugal</p>
+</div>
+
+<div class="card">
+
+<div class="match">
+<span class="flags">🇨🇴</span>
+COLOMBIA
+VS
+PORTUGAL
+<span class="flags">🇵🇹</span>
+</div>
+
+<input
+id="nombre"
+placeholder="Escribe tu nombre">
+
+<div class="score-container">
+
+<input
+id="colombia"
+type="number"
+min="0"
+placeholder="Goles Colombia">
+
+<input
+id="portugal"
+type="number"
+min="0"
+placeholder="Goles Portugal">
+
+</div>
+
+<button
+class="save-btn"
+onclick="guardarPronostico()">
+⚽ Guardar Pronóstico
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>🏆 Pronósticos registrados</h2>
+
+<div class="total" id="contador">
+0 pronósticos
+</div>
+
+<div id="lista"></div>
+
+</div>
+
+<div class="footer">
+Hecho para Colombia 🇨🇴 vs Portugal 🇵🇹
+</div>
+
+</div>
+
+<script>
+
+const supabaseUrl = "https://pdicfgdzetykamooblfs.supabase.co";
+const supabaseKey = "sb_publishable_OFkf6Xc6GFNeaRUnFzf9CA_f9coWbqL";
+
+const supabase =
+window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+
+async function guardarPronostico(){
+
+    const nombre =
+    document.getElementById("nombre").value.trim();
+
+    const colombia =
+    document.getElementById("colombia").value;
+
+    const portugal =
+    document.getElementById("portugal").value;
+
+    if(!nombre){
+        alert("Ingresa tu nombre");
+        return;
+    }
+
+    if(colombia === "" || portugal === ""){
+        alert("Ingresa ambos marcadores");
+        return;
+    }
+
+    const { error } = await supabase
+    .from("pronosticos")
+    .insert({
+        nombre: nombre,
+        colombia: Number(colombia),
+        portugal: Number(portugal)
+    });
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("colombia").value = "";
+    document.getElementById("portugal").value = "";
+
+    cargarPronosticos();
+}
+
+async function eliminarPronostico(id){
+
+    if(!confirm("¿Deseas eliminar este pronóstico?")){
+        return;
+    }
+
+    const { error } = await supabase
+    .from("pronosticos")
+    .delete()
+    .eq("id", id);
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    cargarPronosticos();
+}
+
+async function cargarPronosticos(){
+
+    const { data, error } = await supabase
+    .from("pronosticos")
+    .select("*")
+    .order("created_at", { ascending:false });
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("contador").innerHTML =
+        `${data.length} pronóstico(s) registrados`;
+
+    const lista =
+    document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    data.forEach(item => {
+
+        lista.innerHTML += `
+        <div class="pronostico">
+
+            <div>
+                <strong>${item.nombre}</strong>
+                <br><br>
+                🇨🇴 ${item.colombia}
+                -
+                ${item.portugal} 🇵🇹
+            </div>
+
+            <button
+            class="delete-btn"
+            onclick="eliminarPronostico('${item.id}')">
+            🗑 Eliminar
+            </button>
+
+        </div>
+        `;
+    });
+}
+
+cargarPronosticos();
+
+</script>
+
+</body>
+</html>
