@@ -6,8 +6,6 @@
 
 <title>⚽ Pronósticos Colombia vs Portugal</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 
 *{
@@ -17,12 +15,11 @@
 }
 
 body{
-    font-family: 'Segoe UI', sans-serif;
+    font-family:Segoe UI, Arial, sans-serif;
     min-height:100vh;
     background:
-    linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
-    url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1600&q=80');
-
+    linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
+    url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1600&q=80");
     background-size:cover;
     background-position:center;
     color:white;
@@ -34,38 +31,30 @@ body{
     padding:30px;
 }
 
-.header{
+h1{
     text-align:center;
-    margin-bottom:30px;
-}
-
-.header h1{
-    font-size:3rem;
     margin-bottom:10px;
 }
 
-.header p{
-    color:#dcdcdc;
+.subtitle{
+    text-align:center;
+    margin-bottom:30px;
+    color:#ddd;
 }
 
 .card{
-    background:rgba(255,255,255,0.12);
+    background:rgba(255,255,255,.12);
     backdrop-filter:blur(10px);
     border-radius:20px;
     padding:25px;
-    margin-bottom:25px;
-    border:1px solid rgba(255,255,255,0.2);
+    margin-bottom:20px;
 }
 
 .match{
     text-align:center;
-    font-size:2rem;
-    margin-bottom:20px;
+    font-size:32px;
     font-weight:bold;
-}
-
-.flags{
-    font-size:3rem;
+    margin-bottom:25px;
 }
 
 input{
@@ -77,44 +66,35 @@ input{
     font-size:16px;
 }
 
-.score-container{
+.score{
     display:flex;
     gap:15px;
-    margin-top:15px;
 }
 
 button{
-    width:100%;
     border:none;
-    border-radius:10px;
-    padding:15px;
-    margin-top:20px;
     cursor:pointer;
+    border-radius:10px;
+    padding:14px;
     font-weight:bold;
-    font-size:16px;
 }
 
-.save-btn{
-    background:#00b050;
+#guardarBtn{
+    width:100%;
+    margin-top:15px;
+    background:#00a651;
     color:white;
 }
 
-.save-btn:hover{
-    background:#009245;
-}
-
-.delete-btn{
-    background:#e53935;
-    color:white;
-    width:auto;
-    padding:10px 15px;
+#guardarBtn:hover{
+    background:#008542;
 }
 
 .pronostico{
     background:white;
     color:black;
-    border-radius:12px;
     padding:15px;
+    border-radius:12px;
     margin-top:10px;
 
     display:flex;
@@ -122,25 +102,20 @@ button{
     align-items:center;
 }
 
-.pronostico strong{
-    font-size:18px;
+.deleteBtn{
+    background:#d62828;
+    color:white;
 }
 
-.total{
+.contador{
     margin-top:10px;
     color:#ffd700;
     font-weight:bold;
 }
 
-.footer{
-    text-align:center;
-    margin-top:20px;
-    color:#ddd;
-}
-
 @media(max-width:700px){
 
-    .score-container{
+    .score{
         flex-direction:column;
     }
 
@@ -150,43 +125,33 @@ button{
         text-align:center;
     }
 
-    .header h1{
-        font-size:2rem;
-    }
-
     .match{
-        font-size:1.4rem;
+        font-size:24px;
     }
-
 }
 
 </style>
-
 </head>
 <body>
 
 <div class="container">
 
-<div class="header">
-<h1>⚽ PRONÓSTICOS DEL PARTIDO ⚽</h1>
-<p>Comparte tu predicción para Colombia vs Portugal</p>
+<h1>⚽ PRONÓSTICOS MUNDIAL 2026 ⚽</h1>
+<div class="subtitle">
+Colombia 🇨🇴 vs Portugal 🇵🇹
 </div>
 
 <div class="card">
 
 <div class="match">
-<span class="flags">🇨🇴</span>
-COLOMBIA
-VS
-PORTUGAL
-<span class="flags">🇵🇹</span>
+🇨🇴 COLOMBIA VS PORTUGAL 🇵🇹
 </div>
 
 <input
 id="nombre"
-placeholder="Escribe tu nombre">
+placeholder="Tu nombre">
 
-<div class="score-container">
+<div class="score">
 
 <input
 id="colombia"
@@ -202,9 +167,7 @@ placeholder="Goles Portugal">
 
 </div>
 
-<button
-class="save-btn"
-onclick="guardarPronostico()">
+<button id="guardarBtn">
 ⚽ Guardar Pronóstico
 </button>
 
@@ -214,32 +177,99 @@ onclick="guardarPronostico()">
 
 <h2>🏆 Pronósticos registrados</h2>
 
-<div class="total" id="contador">
-0 pronósticos
+<div id="contador" class="contador">
+0 participantes
 </div>
 
 <div id="lista"></div>
 
 </div>
 
-<div class="footer">
-Hecho para Colombia 🇨🇴 vs Portugal 🇵🇹
 </div>
 
-</div>
+<script type="module">
 
-<script>
+import { createClient }
+from "https://esm.sh/@supabase/supabase-js@2";
 
-const supabaseUrl = "https://pdicfgdzetykamooblfs.supabase.co";
-const supabaseKey = "sb_publishable_OFkf6Xc6GFNeaRUnFzf9CA_f9coWbqL";
-
-const supabase =
-window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
+const supabase = createClient(
+"https://pdicfgdzetykamooblfs.supabase.co",
+"sb_publishable_OFkf6Xc6GFNeaRUnFzf9CA_f9coWbqL"
 );
 
-async function guardarPronostico(){
+async function cargarPronosticos(){
+
+    const { data, error } = await supabase
+    .from("pronosticos")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("contador").innerHTML =
+    `${data.length} participante(s)`;
+
+    const lista =
+    document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    data.forEach(item=>{
+
+        const fila =
+        document.createElement("div");
+
+        fila.className = "pronostico";
+
+        fila.innerHTML = `
+        <div>
+            <strong>${item.nombre}</strong><br>
+            🇨🇴 ${item.colombia} - ${item.portugal} 🇵🇹
+        </div>
+
+        <button
+        class="deleteBtn"
+        data-id="${item.id}">
+        Eliminar
+        </button>
+        `;
+
+        lista.appendChild(fila);
+    });
+
+    document.querySelectorAll(".deleteBtn")
+    .forEach(btn=>{
+
+        btn.addEventListener("click", async ()=>{
+
+            const id =
+            btn.dataset.id;
+
+            const { error } =
+            await supabase
+            .from("pronosticos")
+            .delete()
+            .eq("id", id);
+
+            if(error){
+                alert(error.message);
+                return;
+            }
+
+            cargarPronosticos();
+
+        });
+
+    });
+
+}
+
+document
+.getElementById("guardarBtn")
+.addEventListener("click", async ()=>{
 
     const nombre =
     document.getElementById("nombre").value.trim();
@@ -256,92 +286,32 @@ async function guardarPronostico(){
     }
 
     if(colombia === "" || portugal === ""){
-        alert("Ingresa ambos marcadores");
+        alert("Ingresa los marcadores");
         return;
     }
 
-    const { error } = await supabase
+    const { error } =
+    await supabase
     .from("pronosticos")
     .insert({
-        nombre: nombre,
-        colombia: Number(colombia),
-        portugal: Number(portugal)
+        nombre,
+        colombia:Number(colombia),
+        portugal:Number(portugal)
     });
-
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    document.getElementById("nombre").value = "";
-    document.getElementById("colombia").value = "";
-    document.getElementById("portugal").value = "";
-
-    cargarPronosticos();
-}
-
-async function eliminarPronostico(id){
-
-    if(!confirm("¿Deseas eliminar este pronóstico?")){
-        return;
-    }
-
-    const { error } = await supabase
-    .from("pronosticos")
-    .delete()
-    .eq("id", id);
-
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    cargarPronosticos();
-}
-
-async function cargarPronosticos(){
-
-    const { data, error } = await supabase
-    .from("pronosticos")
-    .select("*")
-    .order("created_at", { ascending:false });
 
     if(error){
         console.error(error);
+        alert(error.message);
         return;
     }
 
-    document.getElementById("contador").innerHTML =
-        `${data.length} pronóstico(s) registrados`;
+    document.getElementById("nombre").value="";
+    document.getElementById("colombia").value="";
+    document.getElementById("portugal").value="";
 
-    const lista =
-    document.getElementById("lista");
+    cargarPronosticos();
 
-    lista.innerHTML = "";
-
-    data.forEach(item => {
-
-        lista.innerHTML += `
-        <div class="pronostico">
-
-            <div>
-                <strong>${item.nombre}</strong>
-                <br><br>
-                🇨🇴 ${item.colombia}
-                -
-                ${item.portugal} 🇵🇹
-            </div>
-
-            <button
-            class="delete-btn"
-            onclick="eliminarPronostico('${item.id}')">
-            🗑 Eliminar
-            </button>
-
-        </div>
-        `;
-    });
-}
+});
 
 cargarPronosticos();
 
