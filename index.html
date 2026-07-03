@@ -138,7 +138,7 @@ button{
 
 <h1>⚽ Polla familia peluche ⚽</h1>
 <div class="subtitle">
-Colombia 🇨🇴 vs Portugal 🇵🇹
+Colombia 🇨🇴 vs GHANA GH
 </div>
 
     <div id="estadoPronostico"
@@ -164,7 +164,7 @@ margin-bottom:20px;
 <div class="card">
 
 <div class="match">
-🇨🇴 COLOMBIA VS PORTUGAL 🇵🇹
+🇨🇴 COLOMBIA VS GHANA GH
 </div>
 
 <input
@@ -180,10 +180,10 @@ min="0"
 placeholder="Goles Colombia">
 
 <input
-id="portugal"
+id="GHANA"
 type="number"
 min="0"
-placeholder="Goles Portugal">
+placeholder="Goles GHANA">
 
 </div>
 
@@ -216,26 +216,6 @@ const supabase = createClient(
 "https://pdicfgdzetykamooblfs.supabase.co",
 "sb_publishable_OFkf6Xc6GFNeaRUnFzf9CA_f9coWbqL"
 );
-
-    // ====================
-// CIERRE DE POLLA
-// ====================
-
-// CAMBIA LA FECHA AL SÁBADO QUE NECESITES
-const fechaCierre = new Date("2026-06-27T18:00:00-05:00");
-
-function actualizarContador(){
-
-    const ahora = new Date();
-    const diferencia = fechaCierre - ahora;
-
-    if(diferencia <= 0){
-
-        document.getElementById("estadoPronostico").innerHTML =
-        "🔒 Pronósticos cerrados";
-
-        document.getElementById("contadorTiempo").innerHTML =
-        "⏰ El plazo terminó";
 
         const btn =
         document.getElementById("guardarBtn");
@@ -313,7 +293,7 @@ async function cargarPronosticos(){
         fila.innerHTML = `
         <div>
             <strong>${item.nombre}</strong><br>
-            🇨🇴 ${item.colombia} - ${item.portugal} 🇵🇹
+            🇨🇴 ${item.colombia} - ${item.ghana} 🇵🇹
         </div>
         `;
 
@@ -363,15 +343,15 @@ document
     const colombia =
     document.getElementById("colombia").value;
 
-    const portugal =
-    document.getElementById("portugal").value;
+    const GHANA =
+    document.getElementById("ghana").value;
 
     if(!nombre){
         alert("Ingresa tu nombre");
         return;
     }
 
-    if(colombia === "" || portugal === ""){
+    if(colombia === "" || ghana === ""){
         alert("Ingresa los marcadores");
         return;
     }
@@ -382,7 +362,7 @@ document
     .insert({
         nombre,
         colombia:Number(colombia),
-        portugal:Number(portugal)
+        ghana:Number(ghana)
     });
 
     if(error){
@@ -393,7 +373,7 @@ document
 
     document.getElementById("nombre").value="";
     document.getElementById("colombia").value="";
-    document.getElementById("portugal").value="";
+    document.getElementById("ghana").value="";
 
     cargarPronosticos();
 
