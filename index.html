@@ -370,31 +370,9 @@ async function cargarPronosticos(){
         <strong>${item.nombre}</strong><br>
         <span class="marcador">🇨🇴 ${item.colombia} - ${item.ghana} 🇬🇭</span>
       </div>
-      <button class="deleteBtn" data-id="${item.id}">🗑️ Eliminar</button>
     `;
 
     lista.appendChild(fila);
-  });
-
-  document.querySelectorAll(".deleteBtn").forEach(delBtn=>{
-
-    delBtn.addEventListener("click", async ()=>{
-
-      const id = delBtn.dataset.id;
-
-      const { error } = await supabase
-        .from("pronosticos")
-        .delete()
-        .eq("id", id);
-
-      if(error){
-        alert(error.message);
-        return;
-      }
-
-      cargarPronosticos();
-    });
-
   });
 
 }
