@@ -11,7 +11,7 @@
   --verde-oscuro:#062419;
   --dorado:#ffd700;
   --colombia:#ffcd00;
-  --ghana:#ce1126;
+  --suiza:#ce1126;
   --blanco:#ffffff;
 }
 
@@ -259,7 +259,7 @@ button:active{
       <div class="vs">VS</div>
       <div class="team">
         <span class="flag">🇬🇭</span>
-        <span class="name">GHANA</span>
+        <span class="name">SUIZA</span>
       </div>
     </div>
 
@@ -275,8 +275,8 @@ button:active{
         <input id="colombia" type="number" min="0" placeholder="0">
       </div>
       <div>
-        <label for="ghana">Goles Ghana</label>
-        <input id="ghana" type="number" min="0" placeholder="0">
+        <label for="suiza">Goles Suiza</label>
+        <input id="suiza" type="number" min="0" placeholder="0">
       </div>
     </div>
 
@@ -301,9 +301,9 @@ const supabase = createClient(
   "sb_publishable_OFkf6Xc6GFNeaRUnFzf9CA_f9coWbqL"
 );
 
-// Fecha y hora de cierre de pronósticos: viernes 3 de julio 2026, 8:30 p.m. hora Colombia (UTC-5)
+// Fecha y hora de cierre de pronósticos: martes 7 de julio 2026, 3:00 p.m. hora Colombia (UTC-5)
 // Cambia esta fecha si el partido se reprograma.
-const fechaCierre = new Date("2026-07-03T20:31:00-05:00");
+const fechaCierre = new Date("2026-07-07T15:00:00-05:00");
 
 const btn = document.getElementById("guardarBtn");
 
@@ -368,7 +368,7 @@ async function cargarPronosticos(){
     fila.innerHTML = `
       <div>
         <strong>${item.nombre}</strong><br>
-        <span class="marcador">🇨🇴 ${item.colombia} - ${item.ghana} 🇬🇭</span>
+        <span class="marcador">🇨🇴 ${item.colombia} - ${item.suiza} 🇬🇭</span>
       </div>
     `;
 
@@ -387,14 +387,14 @@ btn.addEventListener("click", async ()=>{
 
   const nombre = document.getElementById("nombre").value.trim();
   const colombia = document.getElementById("colombia").value;
-  const ghana = document.getElementById("ghana").value;
+  const suiza = document.getElementById("suiza").value;
 
   if(!nombre){
     alert("Ingresa tu nombre");
     return;
   }
 
-  if(colombia === "" || ghana === ""){
+  if(colombia === "" || suiza === ""){
     alert("Ingresa los marcadores");
     return;
   }
@@ -404,7 +404,7 @@ btn.addEventListener("click", async ()=>{
     .insert({
       nombre,
       colombia: Number(colombia),
-      ghana: Number(ghana)
+      suiza: Number(suiza)
     });
 
   if(error){
@@ -415,7 +415,7 @@ btn.addEventListener("click", async ()=>{
 
   document.getElementById("nombre").value = "";
   document.getElementById("colombia").value = "";
-  document.getElementById("ghana").value = "";
+  document.getElementById("suiza").value = "";
 
   cargarPronosticos();
 
